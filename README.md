@@ -1,2 +1,6 @@
-# video-service
-Takes encoded images and converts them to a video
+# Video Service
+
+Takes encoded images and converts them to a video using FFMPEG
+
+## Requirements
+ffmpeg
