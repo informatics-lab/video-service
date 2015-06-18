@@ -36,7 +36,7 @@ if __name__ == "__main__":
                 except rn.exc.OffTheRailsException:
                     logger.exception(rn.exc.OffTheRailsException("Variable " + variable + "not found."))
                 else:
-                    imgnav = varn["images"]
+                    imgnav = varnav["images"]
                     if ("videos" not in varnav.links().keys()) and (len(imgnav) == settings.nframes):
                         logger.info("Making video for " \
                                     + imgnav[0].fetch()["forecast_reference_time"] \
