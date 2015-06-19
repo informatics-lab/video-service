@@ -36,14 +36,14 @@ if __name__ == "__main__":
                 except rn.exc.OffTheRailsException:
                     logger.exception(rn.exc.OffTheRailsException("Variable " + variable + "not found."))
                 else:
-                    imgnav = varn["images"]
+                    imgnav = varnav["images"]
                     if ("videos" not in varnav.links().keys()) and (len(imgnav) == settings.nframes):
                         logger.info("Making video for " \
                                     + imgnav[0].fetch()["forecast_reference_time"] \
                                     + " " + variable)
                         tempdir = tempfile.mkdtemp()
                         for thisimgnav in imgnav:
-                            img = thisimagenav[0].embedded()["images"]
+                            img = thisimgnav[0].embedded()["images"]
                             imgmetadata = thisimgnav.fetch()
                             urllib.urlretrieve(img.uri,
                                     os.path.join([tmpdir, imgmetadata['forecast_reference_time']+".png"]))
@@ -52,11 +52,11 @@ if __name__ == "__main__":
                                 args = settings.ffmpeg_args_template
                                 args[args.index("FILES_IN")] = "'"+os.path.join([tmpdir, "*.png"]+"'")
                                 args[args.index("FILE_OUT")] = vid
-                                logger.infor("Calling ffmpeg with these args: ", args)
+                                logger.info("Calling ffmpeg with these args: ", args)
                                 os.call(args)
 
                                 payload = imgmetadata.pop("forecast_time")
-                                r = requests.post(condif.vid_dest, data=payload, files={"data": vid})
+                                r = requests.post(config.vid_dest, data=payload, files={"data": vid})
                                 if r.status_code != 201:
                                     raise IOError(r.status_code, r.text)
                                 logger.info("Video posted")
