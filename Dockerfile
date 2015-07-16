@@ -1,4 +1,4 @@
-FROM Ubuntu
+FROM ubuntu
 
 RUN sudo apt-get update
 RUN sudo apt-get -y --force-yes wget install autoconf automake build-essential libass-dev libfreetype6-dev libtheora-dev libtool libvdpau-dev libvorbis-dev pkg-config texi2html zlib1g-dev
