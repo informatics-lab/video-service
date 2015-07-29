@@ -5,6 +5,7 @@ import argparse as ap
 import config
 import restnavigator as rn
 import logging
+import logging.handlers
 import tempfile
 import urllib
 import os
@@ -24,9 +25,9 @@ if __name__ == "__main__":
     argparser.add_argument("-s", "--settings", default="default",
         type=str, help="Name of analysis settings, as defined in config.py")
     call_args = argparser.parse_args()
-    settings = ap.Namespace(**config.settings[call_args["settings"]])
+    settings = ap.Namespace(**config.settings[call_args.settings])
 
-    rootnav = rn.Navigator(config.roothal)
+    rootnav = rn.Navigator.hal(config.roothal)
 
     while True:
         try: # catch all try except so that service keeps running
