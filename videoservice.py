@@ -12,7 +12,7 @@ import analysis_config as config
 
 class Job(object):
     def __init__(self, message):
-        self.profile = message["profile"]
+        self.profile_name = message["profile_name"]
         self.model = message["model"]
         self.variable = message["variable"]
         self.message = message
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     video_service_queue = getQueue("video_service_queue")
     job = getJob(video_service_queue)
 
-    settings = ap.Namespace(**config.profile[job.profile])
+    settings = ap.Namespace(**config.profile[job.profile_name])
     rootnav = rn.Navigator.hal(config.roothal)
 
     try:
