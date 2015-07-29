@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 import argparse as ap
-import config
 import restnavigator as rn
 import tempfile
 import urllib
 import os
 import shutil
 import sys
+sys.append("./config")
+import analysis_config as config
 
 class Job(object):
     def __init__(self, message):
