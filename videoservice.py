@@ -7,8 +7,11 @@ import urllib
 import os
 import shutil
 import sys
-sys.append("./config")
-import analysis_config as config
+import boto
+import boto.sqs
+
+sys.path.append(".")
+from config import analysis_config as conf
 
 class Job(object):
     def __init__(self, message):
@@ -32,8 +35,16 @@ def getQueue(queue_name):
     return queue
 
 
+class NoJobsError(Exception):
+    def __init__(self, value=""):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+
 def getJob(queue, visibility_timeout=60):
-    messages = queue.get_messages(visibility_timeout, number_messages=1) #get all messages
+    messages = queue.get_messages(1, visibility_timeout=visibility_timeout)
+
     try:
         message = messages[0]
     except IndexError:
@@ -46,13 +57,13 @@ if __name__ == "__main__":
     video_service_queue = getQueue("video_service_queue")
     job = getJob(video_service_queue)
 
-    settings = ap.Namespace(**config.profile[job.profile_name])
-    rootnav = rn.Navigator.hal(config.roothal)
+    settings = ap.Namespace(**conf.profile[job.profile_name])
+    rootnav = rn.Navigator.hal(conf.roothal)
 
     try:
         varnav = rootnav["models"][job.model]["latest"][job.variable]
     except rn.exc.OffTheRailsException:
-        raise rn.exc.OffTheRailsException("Variable " + job.variable + "not found."))
+        raise rn.exc.OffTheRailsException("Variable " + job.variable + "not found.")
     else:
         imgnav = varnav["images"]
         tempdir = tempfile.mkdtemp()
@@ -69,7 +80,7 @@ if __name__ == "__main__":
                 os.call(args)
 
                 payload = imgmetadata.pop("forecast_time")
-                r = requests.post(config.vid_dest, data=payload, files={"data": vid})
+                r = requests.post(conf.vid_dest, data=payload, files={"data": vid})
                 if r.status_code != 201:
                     raise IOError(r.status_code, r.text)
         shutil.rmtree(tempdir)
