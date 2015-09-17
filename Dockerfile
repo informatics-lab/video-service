@@ -1,4 +1,4 @@
-FROM quay.io/informatics_lab/docker-iris
+FROM quay.io/informaticslab/iris
 
 RUN apt-get update \
   && apt-get -y --force-yes install autoconf automake build-essential libass-dev libfreetype6-dev libtheora-dev libtool libvdpau-dev libvorbis-dev pkg-config texi2html zlib1g-dev wget ffmpeg git \
