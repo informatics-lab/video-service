@@ -42,7 +42,7 @@ class NoJobsError(Exception):
         return repr(self.value)
 
 
-def getJob(queue, visibility_timeout=60):
+def getJob(queue, visibility_timeout=5*60):
     messages = queue.get_messages(1, visibility_timeout=visibility_timeout)
 
     try:
@@ -54,8 +54,10 @@ def getJob(queue, visibility_timeout=60):
 
 
 if __name__ == "__main__":
+    print "Getting job"
     video_service_queue = getQueue("video_service_queue")
     job = getJob(video_service_queue)
+    print job
 
     settings = ap.Namespace(**conf.profile[job.profile_name])
     rootnav = rn.Navigator.hal(conf.roothal)
@@ -67,7 +69,9 @@ if __name__ == "__main__":
     else:
         imgnav = varnav["images"]
         tempdir = tempfile.mkdtemp()
+        print "Getting images ", imgnav
         for thisimgnav in imgnav:
+            print "Doing image ", thisimgnav
             img = thisimgnav.embedded()["images"]
             imgmetadata = thisimgnav.fetch()
             urllib.urlretrieve(img.uri,
@@ -83,8 +87,10 @@ if __name__ == "__main__":
                 r = requests.post(conf.vid_dest, data=payload, files={"data": vid})
                 if r.status_code != 201:
                     raise IOError(r.status_code, r.text)
+        print "Removing tempdirectory", tempdir
         shutil.rmtree(tempdir)
 
+        print "Removing completed job"
         video_service_queue.delete(job.message)
 
         sys.exit()
