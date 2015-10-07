@@ -17,3 +17,5 @@ ENV PATH /opt/conda/bin:$PATH
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+
+CMD ./videoservice.py
