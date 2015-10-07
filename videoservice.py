@@ -46,7 +46,7 @@ class NoJobsError(Exception):
         return repr(self.value)
 
 
-def getJob(queue, visibility_timeout=5*60):
+def getJob(queue, visibility_timeout=1*60):
     messages = queue.get_messages(1, visibility_timeout=visibility_timeout)
 
     try:
