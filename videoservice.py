@@ -70,13 +70,13 @@ if __name__ == "__main__":
         varnav = rootnav["models"][job.model]["latest"][job.variable]
     except rn.exc.OffTheRailsException:
         print "Variable doesn't exist, sleeping"
-        time.sleep(os.getenv("RETRY_TIME"))
+        time.sleep(int(os.getenv("RETRY_TIME")))
         raise rn.exc.OffTheRailsException("Variable " + job.variable + "not found.")
     else:
         imgnav = varnav["images"]
         if len(imgnav) < job.nframes:
             print "Not enough timesteps, sleeping..."
-            time.sleep(os.getenv("RETRY_TIME"))
+            time.sleep(int(os.getenv("RETRY_TIME")))
             raise IOError("Only " + str(len(imgnav)) + " of " + str(job.nframes) + " found, sleeping...")
         tempdir = tempfile.mkdtemp()
         print "Getting images ", imgnav
