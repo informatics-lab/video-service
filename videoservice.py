@@ -23,10 +23,10 @@ class Job(object):
         self.message = message
 
     def __str__(self):
-        return __dict__
+        return str(self.__dict__)
 
     def __repr__(self):
-        return __dict__
+        return str(self.__dict__)
 
 
 def getQueue(queue_name):
