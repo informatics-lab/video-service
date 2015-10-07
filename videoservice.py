@@ -9,15 +9,17 @@ import shutil
 import sys
 import boto
 import boto.sqs
+import json
 
 sys.path.append(".")
 from config import analysis_config as conf
 
 class Job(object):
     def __init__(self, message):
-        self.profile_name = message["profile_name"]
-        self.model = message["model"]
-        self.variable = message["variable"]
+        body = json.loads(message.get_body())
+        self.profile_name = body["profile_name"]
+        self.model = body["model"]
+        self.variable = body["variable"]
         self.message = message
 
     def __str__(self):
@@ -90,7 +92,7 @@ if __name__ == "__main__":
         print "Removing tempdirectory", tempdir
         shutil.rmtree(tempdir)
 
-        print "Removing completed job"
+        print "Removing completed"
         video_service_queue.delete(job.message)
 
         sys.exit()
