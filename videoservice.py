@@ -61,7 +61,7 @@ if __name__ == "__main__":
     job = getJob(video_service_queue)
     print job
 
-    settings = ap.Namespace(**conf.profile[job.profile_name])
+    settings = ap.Namespace(**conf.profiles[job.profile_name])
     rootnav = rn.Navigator.hal(conf.roothal)
 
     try:
