@@ -10,6 +10,7 @@ import sys
 import boto
 import boto.sqs
 import json
+import time
 
 sys.path.append(".")
 from config import analysis_config as conf
@@ -20,6 +21,7 @@ class Job(object):
         self.profile_name = body["profile_name"]
         self.model = body["model"]
         self.variable = body["variable"]
+        self.nframes = body["nframes"]
         self.message = message
 
     def __str__(self):
@@ -67,9 +69,15 @@ if __name__ == "__main__":
     try:
         varnav = rootnav["models"][job.model]["latest"][job.variable]
     except rn.exc.OffTheRailsException:
+        print "Variable doesn't exist, sleeping"
+        time.sleep(os.getenv(RETRY_TIME))
         raise rn.exc.OffTheRailsException("Variable " + job.variable + "not found.")
     else:
         imgnav = varnav["images"]
+        if len(imgnav) < job.nframes:
+            print "Not enough timesteps, sleeping..."
+            time.sleep(os.getenv(RETRY_TIME))
+            raise IOError("Only " + str(len(imgnav)) + " of " + str(job.nframes) + " found, sleeping...")
         tempdir = tempfile.mkdtemp()
         print "Getting images ", imgnav
         for thisimgnav in imgnav:
@@ -78,17 +86,17 @@ if __name__ == "__main__":
             imgmetadata = thisimgnav.fetch()
             urllib.urlretrieve(img.uri,
                     os.path.join([tmpdir, imgmetadata['forecast_reference_time']+".png"]))
-            with tempfile.SpooledTemporaryFile(max_size=2e7, suffix=settings.video_ending) as vid:
-                # wrapping the wildcard in single quotes below means that it is not exanded by the shell
-                args = settings.ffmpeg_args_template
-                args[args.index("FILES_IN")] = "'"+os.path.join([tmpdir, "*.png"]+"'")
-                args[args.index("FILE_OUT")] = vid
-                os.call(args)
+        with tempfile.SpooledTemporaryFile(max_size=2e7, suffix=settings.video_ending) as vid:
+            # wrapping the wildcard in single quotes below means that it is not exanded by the shell
+            args = settings.ffmpeg_args_template
+            args[args.index("FILES_IN")] = "'"+os.path.join([tmpdir, "*.png"]+"'")
+            args[args.index("FILE_OUT")] = vid
+            os.call(args)
 
-                payload = imgmetadata.pop("forecast_time")
-                r = requests.post(conf.vid_dest, data=payload, files={"data": vid})
-                if r.status_code != 201:
-                    raise IOError(r.status_code, r.text)
+            payload = imgmetadata.pop("forecast_time")
+            r = requests.post(conf.vid_dest, data=payload, files={"data": vid})
+            if r.status_code != 201:
+                raise IOError(r.status_code, r.text)
         print "Removing tempdirectory", tempdir
         shutil.rmtree(tempdir)
 
