@@ -94,7 +94,7 @@ if __name__ == "__main__":
             print args
             success = os.system(' '.join(args))
             if success != 0:
-                raise Exception("ffmpeg failed with return code" + success)  
+                raise Exception("ffmpeg failed with return code" + str(success))  
 
             payload = imgmetadata.pop("forecast_time")
             r = requests.post(conf.vid_dest, data=payload, files={"data": vid.name})
