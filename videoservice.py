@@ -84,7 +84,7 @@ if __name__ == "__main__":
             print "Doing image ", img
             imgmetadata = img.fetch()
             urllib.urlretrieve(img.links()["data"].uri,
-                    os.path.join([tempdir, imgmetadata['forecast_reference_time']+".png"]))
+                    os.path.join(tempdir, imgmetadata['forecast_reference_time'], ".png"))
         with tempfile.SpooledTemporaryFile(max_size=2e7, suffix=settings.video_ending) as vid:
             # wrapping the wildcard in single quotes below means that it is not exanded by the shell
             args = settings.ffmpeg_args_template
