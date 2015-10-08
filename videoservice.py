@@ -108,6 +108,7 @@ if __name__ == "__main__":
             payload["data_dimension_y"] = imgmetadata["data_dimensions"]["y"]
             payload["data_dimension_z"] = imgmetadata["data_dimensions"]["z"]
             payload.pop("data_dimensions")
+            payload["geographic_region"] = json.dumps(imgmetadata["geographic_region"])
             print payload
             r = requests.post(conf.vid_data_server, data=payload, files={"data": vid})
             if r.status_code != 201:
