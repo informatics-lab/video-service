@@ -85,12 +85,15 @@ if __name__ == "__main__":
             print "Doing image ", img
             imgmetadata = img.fetch()
             urllib.urlretrieve(img.links()["data"].uri,
-                    os.path.join(tempdir, "frame%03d" % i + ".png"))
+                    os.path.join(tempdir, imgmetadata['forecast_time'] + ".png"))
+
+        for i, file in enumerate(sorted(os.listdir(tempdir))):
+            os.rename(os.path.join(tempdir, file), os.path.join(tempdir, "file%03d.png" % i)
 
         tempfilep = os.path.join(tempfile.gettempdir(), "temp."+settings.video_ending)
         with open(tempfilep, "wb") as vid:
             args = settings.ffmpeg_args_template
-            args[args.index("FILES_IN")] = os.path.join(tempdir, "frame%03d.png")
+            args[args.index("FILES_IN")] = os.path.join(tempdir, "*.png")
             args[args.index("FILE_OUT")] = vid.name
             print args
             success = os.system(' '.join(args))
