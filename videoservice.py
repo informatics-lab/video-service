@@ -73,18 +73,17 @@ if __name__ == "__main__":
         time.sleep(int(os.getenv("RETRY_TIME")))
         raise rn.exc.OffTheRailsException("Variable " + job.variable + "not found.")
     else:
-        imgnav = varnav[job.profile_name]["images"]
-        if len(imgnav.embedded()["images"]) < job.nframes:    
+        imgs = varnav[job.profile_name]["images"].embedded()["images"]
+        if len(imgs) < job.nframes:    
             print "Not enough timesteps, sleeping..."
             time.sleep(int(os.getenv("RETRY_TIME")))
             raise IOError("Only " + str(len(imgnav)) + " of " + str(job.nframes) + " found, sleeping...")
         tempdir = tempfile.mkdtemp()
-        print "Getting images ", imgnav
-        for thisimgnav in imgnav:
-            print "Doing image ", thisimgnav
-            img = thisimgnav.embedded()["images"]
+        print "Getting images"
+        for img in imgs:
+            print "Doing image ", img
             imgmetadata = thisimgnav.fetch()
-            urllib.urlretrieve(img.uri,
+            urllib.urlretrieve(img.links()["data"].uri,
                     os.path.join([tmpdir, imgmetadata['forecast_reference_time']+".png"]))
         with tempfile.SpooledTemporaryFile(max_size=2e7, suffix=settings.video_ending) as vid:
             # wrapping the wildcard in single quotes below means that it is not exanded by the shell
