@@ -98,7 +98,8 @@ if __name__ == "__main__":
                 raise Exception("ffmpeg failed with return code " + str(success))  
 
         with open(tempfilep, "rb") as vid:
-            payload = {"forecast_time": imgmetadata.pop("forecast_time")}
+            payload = {"forecast_time": imgmetadata.pop("forecast_time"),
+                       "mime_type": "video/ogg"}
             r = requests.post(conf.vid_data_server, data=payload, files={"data": vid})
             if r.status_code != 201:
                 raise IOError(r.status_code, r.text)
