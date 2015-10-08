@@ -81,16 +81,16 @@ if __name__ == "__main__":
             raise IOError("Only " + str(len(imgnav)) + " of " + str(job.nframes) + " found, sleeping...")
         tempdir = tempfile.mkdtemp()
         print "Getting images"
-        for img in imgs:
+        for i, img in enumerate(imgs):
             print "Doing image ", img
             imgmetadata = img.fetch()
             urllib.urlretrieve(img.links()["data"].uri,
-                    os.path.join(tempdir, imgmetadata['forecast_time'] + ".png"))
+                    os.path.join(tempdir, "frame%03d" % i + ".png"))
 
         tempfilep = os.path.join(tempfile.gettempdir(), "temp."+settings.video_ending)
         with open(tempfilep, "wb") as vid:
             args = settings.ffmpeg_args_template
-            args[args.index("FILES_IN")] = os.path.join(tempdir, "*.png")
+            args[args.index("FILES_IN")] = os.path.join(tempdir, "frame%03d.png")
             args[args.index("FILE_OUT")] = vid.name
             print args
             success = os.system(' '.join(args))
