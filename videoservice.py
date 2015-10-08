@@ -90,7 +90,7 @@ if __name__ == "__main__":
         tempfilep = os.path.join(tempfile.gettempdir(), "temp."+settings.video_ending)
         with open(tempfilep, "wb") as vid:
             args = settings.ffmpeg_args_template
-            args[args.index("FILES_IN")] = "'" + os.path.join(tempdir, "*.png") + "'"
+            args[args.index("FILES_IN")] = os.path.join(tempdir, "*.png")
             args[args.index("FILE_OUT")] = vid.name
             print args
             success = os.system(' '.join(args))
