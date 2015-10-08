@@ -114,11 +114,12 @@ if __name__ == "__main__":
             if r.status_code != 201:
                 raise IOError(r.status_code, r.text)
             else:
+                print r.headers
                 print "Posted video to data service"
         print "Removing tempdirectory", tempdir
         shutil.rmtree(tempdir)
 
         print "Removing completed"
-        video_service_queue.delete(job.message)
+        #video_service_queue.delete(job.message)
 
         sys.exit()
