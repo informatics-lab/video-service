@@ -98,7 +98,7 @@ if __name__ == "__main__":
                 raise Exception("ffmpeg failed with return code " + str(success))  
 
             payload = imgmetadata.pop("forecast_time")
-            r = requests.post(conf.vid_data_server, data=payload, files={"data": vid.name})
+            r = requests.post(conf.vid_data_server, data=payload, files={"data": vid})
             if r.status_code != 201:
                 raise IOError(r.status_code, r.text)
             else:
