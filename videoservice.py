@@ -88,7 +88,7 @@ if __name__ == "__main__":
         with tempfile.SpooledTemporaryFile(max_size=2e7, suffix=settings.video_ending) as vid:
             # wrapping the wildcard in single quotes below means that it is not exanded by the shell
             args = settings.ffmpeg_args_template
-            args[args.index("FILES_IN")] = "'"+os.path.join([tempdir, "*.png"]+"'")
+            args[args.index("FILES_IN")] = "'"+os.path.join(tempdir, "*.png")+"'"
             args[args.index("FILE_OUT")] = vid
             os.call(args)
 
