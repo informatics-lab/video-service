@@ -13,10 +13,12 @@ RUN wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz \
 
 RUN git clone https://github.com/met-office-lab/cloud-processing-config.git config
 
+ADD requirements.txt ./
+
+RUN pip install -r requirements.txt
+
 ADD [^.]* ./
 
 ENV PATH /opt/conda/bin:$PATH
-
-RUN pip install -r requirements.txt
 
 CMD ./videoservice.py
