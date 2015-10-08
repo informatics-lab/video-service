@@ -17,8 +17,8 @@ ADD requirements.txt ./
 
 RUN pip install -r requirements.txt
 
-ADD [^.]* ./
-
 ENV PATH /opt/conda/bin:$PATH
+
+ADD [^.]* ./
 
 CMD ./videoservice.py
