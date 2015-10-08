@@ -90,7 +90,8 @@ if __name__ == "__main__":
             args = settings.ffmpeg_args_template
             args[args.index("FILES_IN")] = "'"+os.path.join(tempdir, "*.png")+"'"
             args[args.index("FILE_OUT")] = vid
-            os.system(args)
+            print args
+            os.system(' '.join(args))
 
             payload = imgmetadata.pop("forecast_time")
             r = requests.post(conf.vid_dest, data=payload, files={"data": vid})
