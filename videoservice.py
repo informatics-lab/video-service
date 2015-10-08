@@ -85,7 +85,7 @@ if __name__ == "__main__":
             print "Doing image ", img
             imgmetadata = img.fetch()
             urllib.urlretrieve(img.links()["data"].uri,
-                    os.path.join(tempdir, imgmetadata['forecast_reference_time'] + ".png"))
+                    os.path.join(tempdir, imgmetadata['forecast_time'] + ".png"))
 
         tempfilep = os.path.join(tempfile.gettempdir(), "temp."+settings.video_ending)
         with open(tempfilep, "wb") as vid:
@@ -98,8 +98,8 @@ if __name__ == "__main__":
                 raise Exception("ffmpeg failed with return code " + str(success))  
 
         with open(tempfilep, "rb") as vid:
-            import time; time.sleep(300)
             payload = imgmetadata.pop("forecast_time")
+            print vid
             r = requests.post(conf.vid_data_server, data=payload, files={"data": vid})
             if r.status_code != 201:
                 raise IOError(r.status_code, r.text)
