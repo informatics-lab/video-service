@@ -82,7 +82,7 @@ if __name__ == "__main__":
         print "Getting images"
         for img in imgs:
             print "Doing image ", img
-            imgmetadata = thisimgnav.fetch()
+            imgmetadata = img.fetch()
             urllib.urlretrieve(img.links()["data"].uri,
                     os.path.join([tmpdir, imgmetadata['forecast_reference_time']+".png"]))
         with tempfile.SpooledTemporaryFile(max_size=2e7, suffix=settings.video_ending) as vid:
