@@ -74,7 +74,7 @@ if __name__ == "__main__":
         raise rn.exc.OffTheRailsException("Variable " + job.variable + "not found.")
     else:
         imgnav = varnav[job.profile_name]["images"]
-        if len(imgnav) < job.nframes:
+        if len(imgnav.embedded["images"]) < job.nframes:
             print "Not enough timesteps, sleeping..."
             time.sleep(int(os.getenv("RETRY_TIME")))
             raise IOError("Only " + str(len(imgnav)) + " of " + str(job.nframes) + " found, sleeping...")
