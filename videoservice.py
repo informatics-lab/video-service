@@ -11,6 +11,7 @@ import boto
 import boto.sqs
 import json
 import time
+import requests
 
 sys.path.append(".")
 from config import analysis_config as conf
@@ -85,13 +86,15 @@ if __name__ == "__main__":
             imgmetadata = img.fetch()
             urllib.urlretrieve(img.links()["data"].uri,
                     os.path.join(tempdir, imgmetadata['forecast_reference_time'] + ".png"))
-        with tempfile.NamedTemporaryFile(suffix=settings.video_ending) as vid:
+        with tempfile.NamedTemporaryFile(suffix='.' + settings.video_ending) as vid:
             # wrapping the wildcard in single quotes below means that it is not exanded by the shell
             args = settings.ffmpeg_args_template
             args[args.index("FILES_IN")] = "'"+os.path.join(tempdir, "*.png")+"'"
             args[args.index("FILE_OUT")] = vid.name
             print args
-            os.system(' '.join(args))
+            success = os.system(' '.join(args))
+            if success != 0:
+                raise Exception("ffmpeg failed with return code" + success)  
 
             payload = imgmetadata.pop("forecast_time")
             r = requests.post(conf.vid_dest, data=payload, files={"data": vid.name})
