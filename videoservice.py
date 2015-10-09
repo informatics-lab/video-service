@@ -104,7 +104,7 @@ if __name__ == "__main__":
         with open(tempfilep, "rb") as vid:
             payload = imgmetadata
             payload["forecast_time"] = imgmetadata.pop("forecast_time")
-            payload["mime_type"] = "video/ogg"
+            payload["mime_type"] = "video/mp4"
             payload["resolution_x"] = imgmetadata["resolution"]["x"]
             payload["resolution_y"] = imgmetadata["resolution"]["y"]
             payload.pop("resolution")
