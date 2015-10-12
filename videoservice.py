@@ -124,6 +124,6 @@ if __name__ == "__main__":
         shutil.rmtree(tempdir)
 
         print "Removing completed"
-        #video_service_queue.delete(job.message)
+        video_service_queue.delete_message(job.message)
 
         sys.exit()
