@@ -75,10 +75,10 @@ if __name__ == "__main__":
         raise rn.exc.OffTheRailsException("Variable " + job.variable + "not found.")
     else:
         imgs = varnav[job.profile_name]["images"].embedded()["images"]
-        if len(imgs) < job.nframes:    
+        if len(imgs) < job.nframes: 
             print "Not enough timesteps, sleeping..."
             time.sleep(int(os.getenv("RETRY_TIME")))
-            raise IOError("Only " + str(len(imgnav)) + " of " + str(job.nframes) + " found, sleeping...")
+            raise IOError("Only " + str(len(imgs)) + " of " + str(job.nframes) + " found, sleeping...")
         tempdir = tempfile.mkdtemp()
         print "Getting images"
         for i, img in enumerate(imgs):
